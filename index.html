@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gimmick Bro Jan Percaya</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    background: url('https://img1.pixhost.to/images/8040/632609268_image.jpg') no-repeat center center / cover;
+    color: red;
+    font-family: "Courier New", Courier, monospace;
+    text-align: center;
+    overflow: hidden;
+    user-select: none;
+    position: relative;
+  }
+
+  h1, p, a {
+    animation: flicker 0.2s infinite alternate;
+  }
+
+  h1 {
+    font-size: 4em;
+    margin-top: 50px;
+  }
+
+  p, a {
+    font-size: 1.5em;
+    color: red;
+    text-decoration: none;
+    margin-top: 15px;
+  }
+
+  a:hover {
+    color: yellow;
+  }
+
+  #countdown {
+    font-size: 2em;
+    margin-top: 20px;
+    color: yellow;
+  }
+
+  /* Centered key input overlay */
+  #keySection {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.7);
+    padding: 20px 30px;
+    border: 2px solid red;
+    border-radius: 10px;
+  }
+
+  input {
+    padding: 10px;
+    font-size: 1.2em;
+    width: 200px;
+    text-align: center;
+  }
+
+  button {
+    padding: 10px 20px;
+    margin-left: 10px;
+    font-size: 1em;
+    cursor: pointer;
+  }
+
+  @keyframes flicker {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+  }
+</style>
+</head>
+<body>
+  <h1>OLLA IM VORTUNIX INFINITY!</h1>
+  <p>Process Encrypted Your File</p>
+  <p><strong>엔티드 크래셔 </strong></p>
+  <p><a href="https://example.com" target="_blank">Click here for instructions</a></p>
+  <div id="countdown">Time left: 03:00</div>
+
+  <div id="keySection">
+    <p>Gimmick Bro Jangan Panick:</p>
+    <input type="text" id="keyInput" placeholder="Enter key here">
+    <button onclick="checkKey()">Unlock</button>
+  </div>
+
+  <!-- Custom sounds -->
+  <audio id="alarmSound" autoplay loop>
+    <source src="https://files.catbox.moe/oahjj1.mpeg" type="audio/mpeg">
+  </audio>
+  <audio id="glitchSound" loop>
+    <source src="https://files.catbox.moe/oahjj1.mpeg" type="audio/mpeg">
+  </audio>
+
+<script>
+  // Countdown timer 3 menit (180 detik)
+  let time = 180;
+  const countdown = document.getElementById('countdown');
+
+  setInterval(() => {
+    let minutes = Math.floor(time / 60);
+    let seconds = time % 60;
+    seconds = seconds < 10 ? '0' + seconds : seconds;
+    countdown.textContent = Time left: ${minutes}:${seconds};
+    if(time > 0) time--;
+  }, 1000);
+
+  const correctKey = "2008";
+
+  function checkKey() {
+    const input = document.getElementById('keyInput').value;
+    const alarm = document.getElementById('alarmSound');
+    const glitch = document.getElementById('glitchSound');
+
+    if(input === correctKey) {
+      alert("Key accepted! Files unlocked.");
+      document.body.innerHTML = "<h1 style='color:green;'>FILES UNLOCKED! 😎</h1>";
+      alarm.pause();
+      glitch.pause();
+    } else {
+      alert("Incorrect key! Screen frozen!");
+      glitch.play();
+      document.getElementById('keyInput').disabled = true;
+      document.querySelector('button').disabled = true;
+      let shake = setInterval(() => {
+        document.body.style.transform = translate(${Math.random()*20-10}px, ${Math.random()*20-10}px);
+      }, 50);
+      setTimeout(() => {
+        clearInterval(shake);
+        document.body.style.transform = 'none';
+        document.getElementById('keyInput').disabled = false;
+        document.querySelector('button').disabled = false;
+      }, 10000);
+    }
+  }
+</script>
+</body>
+</html>
