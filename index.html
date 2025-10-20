@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <title>SendMail – FikXzMods</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root { --base: 16px; }
+    @media (min-resolution: 2dppx) { :root { --base: 18px; } }
+    @media (min-resolution: 3dppx) { :root { --base: 20px; } }
+    html { font-size: var(--base); scroll-behavior: smooth; }
+    @media (prefers-color-scheme: dark) { html { color-scheme: dark; } }
+    @keyframes fadeIn { from { opacity: 0; transform: scale(.95); } to { opacity: 1; transform: scale(1); } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .fadeIn { animation: fadeIn .3s ease-out forwards; }
+    .loader { width: 1.25rem; height: 1.25rem; border: 0.1875rem solid transparent; border-top: 0.1875rem solid currentColor; border-radius: 50%; animation: spin 1s linear infinite; }
+  </style>
+</head>
+<body class="min-h-[100svh] flex items-center justify-center bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
+
+  <button id="openDocs" class="fixed top-4 right-4 z-30 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-100 font-medium px-3 py-1.5 rounded-lg shadow-md transition-transform active:scale-90">📖 Docs</button>
+
+  <div id="docsModal" class="fixed inset-0 z-40 bg-black/40 dark:bg-black/60 flex items-center justify-center p-4 hidden">
+    <div id="modalContent" class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl w-full max-w-lg max-h-[90svh] overflow-y-auto ring-1 ring-black/5 dark:ring-white/10 p-6">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-bold text-sky-600 dark:text-sky-400">📘 Dokumentasi API</h2>
+        <button id="closeDocs" class="text-2xl leading-none">&times;</button>
+      </div>
+      <div class="space-y-4 text-sm text-slate-700 dark:text-slate-200">
+        <p>Endpoint <code class="bg-slate-200 dark:bg-slate-700 px-1 rounded">GET https://api.fikmydomainsz.xyz/tools/sendmail/send</code> menerima parameter query:</p>
+        <ul class="list-disc list-inside space-y-1"><li><strong>to</strong> – alamat email tujuan (wajib)</li><li><strong>subject</strong> – subjek email (wajib)</li><li><strong>message</strong> – isi pesan (wajib)</li></ul>
+        <h3 class="font-semibold mt-4 mb-1">Contoh cURL</h3>
+        <pre class="bg-slate-100 dark:bg-slate-900 p-2 rounded text-xs overflow-x-auto"><code id="curl">curl "https://api.fikmydomainsz.xyz/tools/sendmail/send?to=someone@example.com&subject=Hello&message=Hi%20there"</code></pre>
+        <button onclick="navigator.clipboard.writeText(document.getElementById('curl').textContent)" class="text-xs underline text-sky-600 dark:text-sky-400">Salin</button>
+        <h3 class="font-semibold mt-4 mb-1">Contoh JavaScript</h3>
+        <pre class="bg-slate-100 dark:bg-slate-900 p-2 rounded text-xs overflow-x-auto"><code id="js">fetch("https://api.fikmydomainsz.xyz/tools/sendmail/send?to=someone@example.com&subject=Hello&message=Hi%20there")</code></pre>
+        <button onclick="navigator.clipboard.writeText(document.getElementById('js').textContent)" class="text-xs underline text-sky-600 dark:text-sky-400">Salin</button>
+        <p class="mt-4 text-xs text-slate-500 dark:text-slate-400">Gunakan URL-encode pada parameter.</p>
+      </div>
+      <button id="closeDocs2" class="mt-6 w-full bg-sky-600 hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-600 text-white py-2 rounded-lg transition-transform active:scale-95">Tutup</button>
+    </div>
+  </div>
+
+  <main class="w-full max-w-md mx-4">
+    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-6 sm:p-8 ring-1 ring-black/5 dark:ring-white/10">
+      <h1 class="text-3xl font-bold text-center mb-1 text-sky-600 dark:text-sky-400">📧 SendMail</h1>
+      <p class="text-center text-sm text-slate-500 dark:text-slate-400 mb-6">Kirim email lewat web && api</p>
+      <form id="mailForm" class="space-y-5">
+        <label class="block"><span class="text-sm font-medium text-slate-700 dark:text-slate-200">To</span><input type="email" id="to" required class="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 transition"/></label>
+        <label class="block"><span class="text-sm font-medium text-slate-700 dark:text-slate-200">Subject</span><input type="text" id="subject" required class="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 transition"/></label>
+        <label class="block"><span class="text-sm font-medium text-slate-700 dark:text-slate-200">Message</span><textarea id="message" rows="4" required class="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 px-3 py-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-sky-500 dark:focus:ring-sky-400 transition"></textarea></label>
+        <button type="submit" class="w-full flex items-center justify-center gap-2 bg-sky-600 hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-600 text-white font-semibold py-3 rounded-lg transition-transform active:scale-[.98]"><span id="btnText">Kirim Email</span><span id="spinner" class="loader hidden"></span></button>
+      </form>
+      <div id="alert" class="mt-5 text-center text-sm hidden"></div>
+
+
+      <footer class="mt-8 text-center text-xs text-slate-500 dark:text-slate-400">
+        <p>Source Code: <a href="https://github.com/FikXzModzDeveloper/Send-Email-Web.git" target="_blank" class="underline text-sky-600 dark:text-sky-400">GitHub</a></p>
+        <p>Channel: <a href="https://whatsapp.com/channel/0029Vb6Jjyf8KMqtrGJZJy0y" target="_blank" class="underline text-sky-600 dark:text-sky-400">WhatsaApp</a></p>
+      </footer>
+    </div>
+  </main>
+
+  <script>
+    const openBtn  = document.getElementById('openDocs');
+    const closeBtn = document.getElementById('closeDocs');
+    const closeBtn2 = document.getElementById('closeDocs2');
+    const modal    = document.getElementById('docsModal');
+    const modalContent = document.getElementById('modalContent');
+
+    const showModal = () => { modal.classList.remove('hidden'); modalContent.classList.add('fadeIn'); };
+    const hideModal = () => { modal.classList.add('hidden'); modalContent.classList.remove('fadeIn'); };
+
+    openBtn.addEventListener('click', showModal);
+    [closeBtn, closeBtn2].forEach(b => b.addEventListener('click', hideModal));
+    modal.addEventListener('click', e => { if (e.target === modal) hideModal(); });
+
+    const api = 'https://api.fikmydomainsz.xyz/tools/sendmail/send';
+    const form   = document.getElementById('mailForm');
+    const btn    = form.querySelector('button');
+    const btnTxt = document.getElementById('btnText');
+    const spinner = document.getElementById('spinner');
+    const alertBox = document.getElementById('alert');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      setLoading(true);
+      hideAlert();
+
+      const params = new URLSearchParams({
+        to: document.getElementById('to').value.trim(),
+        subject: document.getElementById('subject').value.trim(),
+        message: document.getElementById('message').value.trim()
+      });
+
+      try {
+        const res = await fetch(`${api}?${params.toString()}`);
+        const data = await res.json();
+        if (data.success) {
+          showAlert('✅ Email Udah ke kirim nih', 'text-green-600 dark:text-green-400');
+          form.reset();
+        } else {
+          showAlert(`❌ Gagal: ${data.error || 'Unknown error'}`, 'text-red-600 dark:text-red-400');
+        }
+      } catch {
+        showAlert('❌ Terjadi kesalahan jaringan.', 'text-red-600 dark:text-red-400');
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    function setLoading(on) {
+      btn.disabled = on;
+      btnTxt.textContent = on ? 'Mengirim...' : 'Kirim Email';
+      spinner.classList.toggle('hidden', !on);
+    }
+    function showAlert(msg, color) {
+      alertBox.textContent = msg;
+      alertBox.className = `mt-5 text-center text-sm ${color}`;
+      alertBox.classList.remove('hidden');
+    }
+    function hideAlert() { alertBox.classList.add('hidden'); }
+  </script>
+</body>
+</html>
